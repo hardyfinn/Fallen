@@ -126,6 +126,7 @@ struct DrumSynth {
 	OnePole hp;
 	bool active = false;
 	float choke = 1.f, chokeStep = 0.f;
+	float snappy = 0.6f;  // ANALOG snare noise balance (menu: 0.3, 0.6, 0.9)
 	static constexpr float HAT_F[6] = {205.3f, 304.4f, 369.6f, 522.7f, 540.0f, 800.0f};
 
 	void setup(int voiceId, float s) { id = voiceId; sr = s; noise = Noise(voiceId * 7 + 3); }
@@ -178,7 +179,7 @@ struct DrumSynth {
 					T = 0.12f * dmul;
 					tone = 0.5f * (sine(0, 180.f * tune) + sine(1, 330.f * tune)) * edecay(t, T);
 					nz = f1.process(noise.next()).hp * edecay(t, 0.2f * dmul);
-					y = 0.4f * tone + 0.6f * nz;
+					y = (1.f - snappy) * tone + snappy * nz;
 				}
 				T = 0.2f * dmul;
 				break;

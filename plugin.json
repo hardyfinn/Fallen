@@ -1,0 +1,107 @@
+{
+  "slug": "Fallen",
+  "name": "Fallen",
+  "version": "2.0.0",
+  "license": "GPL-3.0-or-later",
+  "brand": "Fallen",
+  "author": "Hardy",
+  "authorEmail": "",
+  "authorUrl": "",
+  "pluginUrl": "https://github.com/hardyfinn/Fallen",
+  "manualUrl": "https://github.com/hardyfinn/Fallen/blob/main/docs/MANUAL.md",
+  "sourceUrl": "https://github.com/hardyfinn/Fallen",
+  "donateUrl": "",
+  "changelogUrl": "",
+  "modules": [
+    {
+      "slug": "DURA",
+      "name": "DURA Duration Sequencer",
+      "description": "Duration sequencer: 16 steps set in milliseconds, units of a base time (integer x 40 or 50 ms tables) or ratios to a fundamental, each with a repeat count for stutters. One STRETCH slider scales the whole pattern. Microtime, ratio, rhythm.",
+      "tags": [
+        "Sequencer",
+        "Clock generator"
+      ]
+    },
+    {
+      "slug": "GROUP",
+      "name": "GROUP Burst Generator",
+      "description": "Bursts of 2 to 16 events whose gaps compress or expand (ritardando, accelerando) inside a period, with slow drift. Stutter, ratchet, rolls, milliseconds.",
+      "tags": [
+        "Clock generator",
+        "Sequencer"
+      ]
+    },
+    {
+      "slug": "PRIME",
+      "name": "PRIME Nested Prime Loops",
+      "description": "Four Euclidean loops with prime lengths (2 to 31) that can nest, each row clocked by another, so they realign rarely. Polyrhythm, prime, euclidean, clock divider.",
+      "tags": [
+        "Clock generator",
+        "Sequencer"
+      ]
+    },
+    {
+      "slug": "LANES",
+      "name": "LANES Drum Grid",
+      "description": "Six-row drum grid where each row has its own loop length and scrolls left or right, with a relaxed-to-intense density control and a pitch row. Loops a little too short, polymeter, trigger sequencer.",
+      "tags": [
+        "Sequencer",
+        "Drum"
+      ]
+    },
+    {
+      "slug": "CYCLE",
+      "name": "CYCLE Phase Lanes",
+      "description": "Four value lanes of different lengths and clock divisions that drift in and out of phase: CV, pitch or FM4 voice numbers. Polymeter, phasing, step sequencer.",
+      "tags": [
+        "Sequencer",
+        "Polyphonic"
+      ]
+    },
+    {
+      "slug": "HOLD",
+      "name": "HOLD Sustain Against Gap",
+      "description": "Holds each note for a percentage of the gap to the next event, from staccato to legato, with attack and release. Stab length, gate length, envelope, VCA.",
+      "tags": [
+        "Envelope generator",
+        "VCA"
+      ]
+    },
+    {
+      "slug": "FM4",
+      "name": "FM4 Four-Operator FM Voice",
+      "description": "4-op FM synth voice, up to 8 voices, that loads and saves 4-operator Yamaha SysEx banks (.syx, VMEM, VCED, ACED) and steps through voices per note. 8 algorithms, 8 waveforms, macros to tweak presets. FM, DX, TX, house organ, bass, bells.",
+      "tags": [
+        "Synth voice",
+        "Polyphonic"
+      ]
+    },
+    {
+      "slug": "CHORD",
+      "name": "CHORD Chord Memory",
+      "description": "Eight chord slots (m7, m9, m11, maj7, sus4, quartal...) with inversion and voicing, out as polyphonic V/oct and gates for stabs. Chord memory, house stab, polyphonic.",
+      "tags": [
+        "Polyphonic",
+        "Quantizer"
+      ]
+    },
+    {
+      "slug": "KIT",
+      "name": "KIT Drum Machine",
+      "description": "Six drum voices (kick, snare, clap, closed and open hat, perc), each synthesised as an early-80s sampled machine or an 808/909-style analogue voice, or played from a WAV sample you load. Drum machine, sampler, WAV, kit folder, crunch.",
+      "tags": [
+        "Drum",
+        "Sampler"
+      ]
+    },
+    {
+      "slug": "SPECTRA",
+      "name": "SPECTRA Additive Spectrum",
+      "description": "Additive oscillator with up to 32 partials, stretched from harmonic to inharmonic, with tilt, odd/even balance and a slowly moving spectral window. Long linear spectrum, drone, additive, stereo.",
+      "tags": [
+        "Oscillator",
+        "Polyphonic"
+      ]
+    }
+  ]
+}

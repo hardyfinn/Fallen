@@ -231,7 +231,7 @@ struct Fm4Engine {
 	}
 
 	// One sample. pitch per channel may change while held (glides from cables). Returns per-channel volts in out[].
-	void process(int nch, const float* pitch, const Fm4Macros& m, const float* spreadCents, float* out) {
+	void process(int nch, const float* pitch, const Fm4Macros* m, const float* spreadCents, float* out) {
 		const Voice4op& lv = bank->v[clampi(lfoVoice, 0, 31)];
 		float dt = 1.f / sr;
 		lfoPhase += fm4::lfoHz(lv.lfs) * dt;
@@ -248,7 +248,7 @@ struct Fm4Engine {
 			out[i] = 0.f;
 			if (!c.active) continue;
 			if (i < nch) c.pitch = pitch[i];
-			if (--c.prepCount <= 0) { prepare(c, m); c.prepCount = 128; }
+			if (--c.prepCount <= 0) { prepare(c, m[i]); c.prepCount = 128; }
 			Prepared& p = c.pr;
 			c.sinceOn += dt;
 			float ramp = p.lfoDelay > 0.f ? clampf(c.sinceOn / p.lfoDelay, 0.f, 1.f) : 1.f;

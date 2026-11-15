@@ -91,13 +91,13 @@ TEST("Factory bank exports and re-imports identically") {
 
 static std::vector<float> render(const Bank4op& b, int voice, float pitch, double sec, float fs = 48000.f, double gateSec = 1e9) {
 	Fm4Engine e; e.bank = &b; e.setSampleRate(fs); e.reset();
-	Fm4Macros m;
+	Fm4Macros m; Fm4Macros mm[8];
 	float sp[8] = {}, out[8];
 	e.noteOn(0, voice, pitch, 1.f, m);
 	std::vector<float> y;
 	for (long i = 0; i < (long)(sec * fs); i++) {
 		if (i == (long)(gateSec * fs)) e.noteOff(0);
-		e.process(1, &pitch, m, sp, out);
+		e.process(1, &pitch, mm, sp, out);
 		y.push_back(out[0]);
 	}
 	return y;
@@ -166,10 +166,10 @@ TEST("FM4 waveforms match their formulas") {
 TEST("FM4 eight voices within CPU budget") {
 	Bank4op b = factoryBank();
 	Fm4Engine e; e.bank = &b; e.setSampleRate(48000); e.reset();
-	Fm4Macros m; float sp[8] = {}, out[8], pitch[8];
+	Fm4Macros m; Fm4Macros mm[8]; float sp[8] = {}, out[8], pitch[8];
 	for (int i = 0; i < 8; i++) { pitch[i] = i / 12.f; e.noteOn(i, i * 3, pitch[i], 1.f, m); }
 	auto t0 = std::chrono::steady_clock::now();
-	for (int i = 0; i < 48000; i++) e.process(8, pitch, m, sp, out);
+	for (int i = 0; i < 48000; i++) e.process(8, pitch, mm, sp, out);
 	double s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
 	std::printf("  FM4 8 voices: %.2f%% of one core\n", s * 100);
 	CHECK(s < 0.05);
