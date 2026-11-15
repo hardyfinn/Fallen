@@ -78,7 +78,9 @@ struct Waves {
 	}
 	// phase in cycles (any value)
 	inline float lookup(int w, float ph) const {
-		ph -= std::floor(ph);
+		int ip = (int)ph;
+		ph -= (float)ip;
+		if (ph < 0.f) ph += 1.f;
 		float x = ph * WT_SIZE;
 		int i = (int)x;
 		if (i >= WT_SIZE) i = WT_SIZE - 1;

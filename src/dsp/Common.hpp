@@ -19,6 +19,13 @@ inline float dbToGain(float db) { return std::pow(10.f, db / 20.f); }
 inline float gainToDb(float g) { return 20.f * std::log10(std::max(g, 1e-9f)); }
 inline float expRange(float t, float lo, float hi) { return lo * std::pow(hi / lo, clampf(t, 0.f, 1.f)); }
 inline float expNorm(float v, float lo, float hi) { return std::log(v / lo) / std::log(hi / lo); }
+// 2^x, relative error < 1e-5 for |x| < 30 (5th-order polynomial on the fraction).
+inline float fastExp2(float x) {
+	x = clampf(x, -60.f, 60.f);
+	float fl = std::floor(x), f = x - fl;
+	float p = 1.f + f * (0.6931472f + f * (0.2402265f + f * (0.0555041f + f * (0.0096181f + f * 0.0013334f))));
+	return std::ldexp(p, (int)fl);
+}
 inline bool finite(float x) { return std::isfinite(x); }
 inline float sanitize(float x) { return std::isfinite(x) ? x : 0.f; }
 

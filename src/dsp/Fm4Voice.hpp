@@ -65,31 +65,37 @@ struct Fm4Macros {
 	float fdbk = 0.f;    // ±7
 };
 
-// Halfband-style 2x decimator (31-tap windowed sinc).
+// Halfband 2x decimator (31-tap windowed sinc; every other tap is zero, so 16 multiplies).
 struct Decim2 {
-	static constexpr int T = 31;
+	static constexpr int T = 31, C = 15;
 	float h[T];
+	int nz[16];
+	int nnz = 0;
 	float buf[64] = {};
 	int w = 0;
 	Decim2() {
 		double sum = 0;
 		for (int i = 0; i < T; i++) {
-			double n = i - (T - 1) / 2.0;
-			double x = n * 0.5 * 0.9;  // cutoff just under the output Nyquist
+			double n = i - C;
+			double x = n * 0.5;
 			double s = n == 0 ? 1.0 : std::sin(M_PI * x) / (M_PI * x);
 			double win = 0.42 - 0.5 * std::cos(2 * M_PI * i / (T - 1)) + 0.08 * std::cos(4 * M_PI * i / (T - 1));
 			h[i] = (float)(s * win);
+			if (std::fabs(h[i]) < 1e-9f) h[i] = 0.f;
 			sum += h[i];
 		}
-		for (float& v : h) v = (float)(v / sum);
+		for (int i = 0; i < T; i++) {
+			h[i] = (float)(h[i] / sum);
+			if (h[i] != 0.f && i != C && nnz < 16) nz[nnz++] = i;
+		}
 	}
 	void reset() { std::memset(buf, 0, sizeof(buf)); }
 	float process(float a, float b) {
 		buf[w] = buf[w + 32] = a; w = (w + 1) & 31;
 		buf[w] = buf[w + 32] = b; w = (w + 1) & 31;
-		float y = 0.f;
-		const float* x = buf + w;  // x[0] is the oldest of the last 32
-		for (int i = 0; i < T; i++) y += h[i] * x[32 - T + i];
+		const float* x = buf + w + 32 - T;
+		float y = h[C] * x[C];
+		for (int k = 0; k < nnz; k++) y += h[nz[k]] * x[nz[k]];
 		return y;
 	}
 };
@@ -201,7 +207,7 @@ struct Fm4Engine {
 		c.active = true;
 		c.sinceOn = 0.f;
 		prepare(c, m);
-		c.prepCount = 32;
+		c.prepCount = 128;
 		for (int k = 0; k < 4; k++) { c.stage[k] = ATTACK; c.phase[k] = 0.f; }
 		c.fb1 = c.fb2 = 0.f;
 		const Voice4op& v = bank->v[c.voice];
@@ -242,14 +248,14 @@ struct Fm4Engine {
 			out[i] = 0.f;
 			if (!c.active) continue;
 			if (i < nch) c.pitch = pitch[i];
-			if (--c.prepCount <= 0) { prepare(c, m); c.prepCount = 32; }
+			if (--c.prepCount <= 0) { prepare(c, m); c.prepCount = 128; }
 			Prepared& p = c.pr;
 			c.sinceOn += dt;
 			float ramp = p.lfoDelay > 0.f ? clampf(c.sinceOn / p.lfoDelay, 0.f, 1.f) : 1.f;
 			float pmCents = lfo * p.pmd * p.pmsCents * ramp;
 			float amDb = (0.5f - 0.5f * lfo) * p.amd * p.amsDb * ramp;
-			float amGain = amDb > 0.f ? std::pow(10.f, -amDb / 20.f) : 1.f;
-			float base = C4 * std::pow(2.f, c.pitch + p.transpose + (pmCents + (i < MAXV ? spreadCents[i] : 0.f)) / 1200.f);
+			float amGain = amDb > 0.f ? fastExp2(-amDb * 0.16609640f) : 1.f;
+			float base = C4 * fastExp2(c.pitch + p.transpose + (pmCents + spreadCents[i]) * (1.f / 1200.f));
 			float inc[4], a[4];
 			bool alive = false;
 			for (int k = 0; k < 4; k++) {
