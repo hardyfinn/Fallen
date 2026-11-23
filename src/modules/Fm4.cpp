@@ -60,7 +60,7 @@ struct FM4Module : Module, FM4Ids {
 		configSwitch(STEP_PARAM, 0.f, 1.f, 0.f, "STEP (next voice on each new note)", {"Off", "On"});
 		configInt(this, FIRST_PARAM, 1, 32, 1, "FIRST voice of the STEP range");
 		configInt(this, COUNT_PARAM, 1, 32, 3, "COUNT of voices in the STEP range");
-		configParam(LEVEL_PARAM, 0.f, 2.f, 1.f, "LEVEL", " dB", -10.f, 20.f);
+		configParam(LEVEL_PARAM, 0.f, 2.f, 1.f, "LEVEL", " dB", -10.f, 20.f)->randomizeEnabled = false;
 		configParam(BRIGHT_PARAM, -20.f, 20.f, 0.f, "BRIGHT (modulator levels, steps)");
 		configParam(RATIO_PARAM, -8.f, 8.f, 0.f, "RATIO (modulator ratio table steps)");
 		configParam(DECAY_PARAM, -10.f, 10.f, 0.f, "DECAY (rate steps, + = longer)");

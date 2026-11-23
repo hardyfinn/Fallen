@@ -53,7 +53,7 @@ struct KITModule : Module, KITIds {
 			configSwitch(SRC1_PARAM + i, 0.f, 2.f, i == 0 ? 1.f : 0.f, n + " source", {"EARLY", "ANALOG", "SAMPLE"});
 			configParam(TUNE1_PARAM + i, -24.f, 24.f, 0.f, n + " TUNE", " semitones");
 			configParam(DECAY1_PARAM + i, 0.f, 1.f, fallen::expNorm(1.f, 0.1f, 2.f), n + " DECAY (× natural decay; samples play in full at 1× and above)", "×", 20.f, 0.1f);
-			configParam(LEVEL1_PARAM + i, 0.f, 2.f, 1.f, n + " LEVEL", " dB", -10.f, 20.f);
+			configParam(LEVEL1_PARAM + i, 0.f, 2.f, 1.f, n + " LEVEL", " dB", -10.f, 20.f)->randomizeEnabled = false;
 			configInput(TRIG1_INPUT + i, n + " TRIG (voltage at the edge sets velocity: 10 V = full)");
 			configInput(TUNE1_INPUT + i, n + " TUNE CV (1 V/oct)");
 			configOutput(OUT1_OUTPUT + i, n + " OUT");

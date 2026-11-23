@@ -19,7 +19,7 @@ struct SPECTRAModule : Module, SPECTRAIds {
 		configParam(DEPTH_PARAM, 0.f, 1.f, 0.f, "DEPTH (flat to only the MOVE window)", "%", 0.f, 100.f);
 		configParam(DETUNE_PARAM, 0.f, 20.f, 0.f, "DETUNE (spread per partial)", " cents");
 		configParam(WIDTH_PARAM, 0.f, 1.f, 0.f, "WIDTH (odd partials left, even right)", "%", 0.f, 100.f);
-		configParam(LEVEL_PARAM, 0.f, 2.f, 1.f, "LEVEL", " dB", -10.f, 20.f);
+		configParam(LEVEL_PARAM, 0.f, 2.f, 1.f, "LEVEL", " dB", -10.f, 20.f)->randomizeEnabled = false;
 		configExp(this, ATTACK_PARAM, 0.001f, 10.f, 0.01f, "ATTACK", " s");
 		configExp(this, RELEASE_PARAM, 0.001f, 20.f, 0.5f, "RELEASE", " s");
 		configInput(STRETCH_INPUT, "STRETCH CV (±5 V = full range)");
